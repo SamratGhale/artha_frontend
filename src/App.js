@@ -1,6 +1,5 @@
-import { Typography } from "@material-ui/core";
 import "./App.css";
-import Nav from "./home";
+import Nav from "./nav";
 
 function App() {
   return (
