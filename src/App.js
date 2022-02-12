@@ -1,13 +1,18 @@
 import "./App.css";
-import Nav from "./nav";
-import Home from "./home";
+import { Router } from "react-router-dom";
+import {createBrowserHistory} from 'history';
+import routes, { renderRoutes } from "./routes";
+//import Routes from "./routes/Routes";
 
+
+const history = createBrowserHistory();
 function App() {
   return (
-    <div className="App">
-      <Nav/>
-      <Home/>
-    </div>
+      <div>
+        <Router history={history}>
+          {renderRoutes(routes)}
+        </Router>
+      </div>
   );
 }
 

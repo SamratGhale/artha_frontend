@@ -48,7 +48,7 @@ export default function SimpleTabs() {
     <div className={classes.root}>
       <AppBar position="static" variant="elevation">
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Inventory"> </Tab>
+          <Tab label="Inventory"/>
           <Tab label="Cart" />
           <Tab label="Checkout" />
         </Tabs>
@@ -65,7 +65,7 @@ export default function SimpleTabs() {
           Cart
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Checkout
+          Checkout 
         </TabPanel>
       </SwipeableViews>
     </div>

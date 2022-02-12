@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from './drawer';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,22 +17,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function DenseAppBar() {
+export default function DenseAppBar({isOpenNav, toggleOpenNav}) {
     const classes = useStyles();
-    const [state, setState] = useState(false);
+    const {pathname} = useLocation();
 
-    const toggleDrawer = () => (event) => {
-        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
+    useEffect(()=>{
+        if(isOpenNav && toggleOpenNav){
+            toggleOpenNav();
         }
-        setState(!state);
-    };
+    },[pathname])
 
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar variant="dense">
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" onClick={toggleDrawer()} aria-label="menu">
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" onClick={()=>{toggleOpenNav()}} aria-label="menu">
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit">
@@ -39,7 +39,7 @@ export default function DenseAppBar() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Drawer state={state} toggleDrawer={toggleDrawer} />
+            <Drawer state={isOpenNav} toggleOpenNav ={toggleOpenNav} />
         </div>
     );
 }

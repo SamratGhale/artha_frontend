@@ -3,7 +3,7 @@ function merge_path(base, submerge_path){
     return `${base}${submerge_path}`
 }
 
-const ROOTS={
+export const ROOTS={
     auth     :'/auth',
     app      :'/app',
     admin    :'/admin',
@@ -25,7 +25,7 @@ export const PATH_PAGE = {
   };
   
   export const PATH_APP = {
-    root: ROOTS,
+    root: ROOTS.app,
     app:
     {
       item_detail     : merge_path(ROOTS.app, '/items/:id'),

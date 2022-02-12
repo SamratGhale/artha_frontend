@@ -1,6 +1,4 @@
-import React, { useState, useCallback } from 'react';
-
-
+import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -11,7 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { ROOTS } from '../routes/paths';
 
 const useStyles = makeStyles({
     list: {
@@ -28,8 +26,11 @@ function HomeIcon(props) {
         </SvgIcon>
     );
 }
+const ListItemButton=(props)=>{
+    return <ListItem button component="a" {...props} />;
+}
 
-export default function Drawer({state, toggleDrawer}) {
+export default function Drawer({state, toggleOpenNav}) {
     const classes = useStyles();
 
     const list = () => (
@@ -38,43 +39,35 @@ export default function Drawer({state, toggleDrawer}) {
                 [classes.fullList]: false,
             })}
             role="presentation"
-            onClick={toggleDrawer()}
-            onKeyDown={toggleDrawer()}
+            onClick={()=>{toggleOpenNav()}}
+            onKeyDown={()=>toggleOpenNav()}
         >
             <List>
-                <ListItem button key={"Home"}>
-                    <ListItemIcon>{<HomeIcon/>}</ListItemIcon>
-                    <ListItemText primary={"Home"} />
-                </ListItem>
-                <ListItem button key={"Analytics"}>
-                    <ListItemIcon>{<InboxIcon />}</ListItemIcon>
-                    <ListItemText primary={"Analytics"} />
-                </ListItem>
+                <ListItemButton key={"Analytics"} href={ROOTS.app}>
+                    <ListItemIcon>{<HomeIcon />}</ListItemIcon>
+                    <ListItemText primary="Home" />
+                </ListItemButton>
             </List>
             <Divider />
             <List>
-                {['About', 'Admin', 'Users'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
+                <ListItemButton key={"Admin"} href={ROOTS.admin}>
+                    <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                    <ListItemText primary={"Admin"} />
+                </ListItemButton>
             </List>
         </div>
     );
 
-    return (
+    return(
         <div>
-            <React.Fragment >
                 <SwipeableDrawer
                     anchor={'left'}
                     open={state}
-                    onClose={toggleDrawer()}
-                    onOpen={toggleDrawer()}
+                    onClose={()=>{toggleOpenNav()}}
+                    onOpen={()=>{toggleOpenNav()}}
                 >
                     {list()}
                 </SwipeableDrawer>
-            </React.Fragment>
         </div>
     );
 }

@@ -1,9 +1,7 @@
 import React from 'react';
-import Page from './Page';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core';
+import Page from './Page';
 import PropTypes from 'prop-types';
-import PageHeader from './PageHeader';
 // ----------------------------------------------------------------------
 
 const useStyles = makeStyles((theme) => ({
@@ -17,15 +15,11 @@ ComponentWrapper.propTypes = {
 
 function ComponentWrapper(props) {
   const classes = useStyles();
-  const { breadcrumbs, heading } = props;
 
   return (
-    <Page className={classes.root} title="Dashboard-App | Rumsan Seed">
-      <Container maxWidth="xl">
-        <PageHeader heading={heading} links={breadcrumbs} />
-        {props.children}
-      </Container>
-    </Page>
+      <Page className = {classes.root} title="Artha">
+          {props.children}
+      </Page>
   );
 }
 
