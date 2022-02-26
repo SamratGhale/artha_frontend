@@ -6,6 +6,7 @@ import ComponentWrapper from '../global/ComponentWrapper';
 import { Redirect } from "react-router-dom";
 import Admin from '../home/admin'
 import AuthProtect from "../global/AuthProtect";
+import { ROLES } from "../constants";
 
 const Routes = {
     path: '*',
@@ -15,6 +16,7 @@ const Routes = {
             exact: true,
             path:ROOTS.admin, 
             heading:'Admin',
+            roles:[ROLES.ADMIN, ROLES.SUPER_ADMIN],
             guard: AuthProtect,
             component : (props)=>(
                 <ComponentWrapper {...props}>
@@ -24,7 +26,8 @@ const Routes = {
         },
         {
             exact: true,
-            path:'/', 
+            path:ROOTS.app, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
             guard: AuthProtect,
             heading: 'Home',
             component : (props)=>(

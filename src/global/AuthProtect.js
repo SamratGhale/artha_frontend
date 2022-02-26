@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { PATH_APP, PATH_PAGE } from '../routes/paths';
+import { PATH_APP, PATH_PAGE, ROOTS } from '../routes/paths';
 import { getUser } from '../utils/sessionManager';
 
 AuthProtect.propTypes = {
@@ -13,7 +13,7 @@ function AuthProtect({ children, authorizedUsers }) {
   if (!currentUser) {
     return <Redirect to={PATH_PAGE.auth.login} />;
   }
-  const { roles, is_approved } = currentUser;
+  const { role, is_approved } = currentUser;
   if (!is_approved) {
     return <Redirect to={PATH_PAGE.auth.waitForApprove} />;
   }
@@ -25,10 +25,13 @@ function AuthProtect({ children, authorizedUsers }) {
         </div>
     )
   }
-  if (authorizedUsers && roles.some((role) => authorizedUsers.includes(role))) {
+  if(authorizedUsers.length==0){
+    return <>{children}</>;
+  }
+  if (authorizedUsers && authorizedUsers.includes(role)) {
     return <>{children}</>;
   } else {
-    return <Redirect to={PATH_APP.root} />;
+    return <Redirect to={ROOTS.app} />;
   }
 }
 
