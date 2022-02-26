@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { PATH_APP, PATH_PAGE } from 'src/routes/paths';
+import { PATH_APP, PATH_PAGE } from '../routes/paths';
 import { getUser } from '../utils/sessionManager';
 
 AuthProtect.propTypes = {

@@ -3,38 +3,38 @@ import DashBoardLayout from "../laylouts";
 import React from "react";
 import Home from '../home';
 import ComponentWrapper from '../global/ComponentWrapper';
+import { Redirect } from "react-router-dom";
 import Admin from '../home/admin'
+import AuthProtect from "../global/AuthProtect";
 
 const Routes = {
-    path: '/',
+    path: '*',
     layout: DashBoardLayout,
     routes:[
         {
             exact: true,
-            //NOTE(samrat) : Add roles
-            //roles: [""] 
-            //NOTE(samrat) : Add authprotect
             path:ROOTS.admin, 
             heading:'Admin',
+            guard: AuthProtect,
             component : (props)=>(
                 <ComponentWrapper {...props}>
-                    {' '}
                     <Admin/>
                 </ComponentWrapper>
             )
         },
         {
             exact: true,
-            //NOTE(samrat) : Add roles
-            //roles: [""] 
-            //NOTE(samrat) : Add authprotect
-            path:ROOTS.app, 
+            path:'/', 
+            guard: AuthProtect,
+            heading: 'Home',
             component : (props)=>(
                 <ComponentWrapper {...props}>
-                    {' '}
                     <Home/>
                 </ComponentWrapper>
             )
+        },
+        {
+            component: () => <Redirect to="/404" />
         }
     ]
 }
