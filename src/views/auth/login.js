@@ -4,6 +4,8 @@ import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { UserContext } from '../../modules/users/context';
+import { ROOTS } from '../../routes/paths';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -16,9 +18,11 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
     const classes = useStyles();
     const {userLogin} = useContext(UserContext);
+    const history = useHistory();
     const handleLogin=async()=>{
         try{
             await userLogin({email, password});
+            history.push(ROOTS.app)
         }catch(err){
             console.error(err);
         }

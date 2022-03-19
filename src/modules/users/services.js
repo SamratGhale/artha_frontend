@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { USER, AUTH } from '../../constants/api';
-import { getUserToken, saveUser, saveUserPermissions, saveUserToken } from '../../utils/sessionManager';
+import {logoutUser, getUserToken, saveUser, saveUserPermissions, saveUserToken } from '../../utils/sessionManager';
 
 const access_token = getUserToken();
 export async function login(payload) {
@@ -15,6 +15,9 @@ export async function login(payload) {
                 reject(err.response.data);
             });
     });
+}
+export async function logout() {
+    logoutUser();
 }
 export async function verifyToken(token) {
     try {

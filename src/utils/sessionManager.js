@@ -1,3 +1,5 @@
+import { PATH_PAGE } from "../routes/paths";
+
 export function getUser() {
     if (
       localStorage.getItem('currentUser') &&
@@ -40,7 +42,7 @@ export function getUser() {
   
   export function logoutUser() {
     localStorage.clear();
-    window.location = '/auth/login';
+    window.location = PATH_PAGE.auth.login;
   }
   
   export function getUserToken() {

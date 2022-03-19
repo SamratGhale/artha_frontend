@@ -23,6 +23,9 @@ export const UserContextProvider = ({ children }) => {
      form.append("password", payload.password);
      return await Service.login(form);
   }
+  function logout() {
+    Service.logout();
+  }
   async function verifyToken(token) {
     return new Promise((resolve, reject) => {
       Service.verifyToken(token)
@@ -105,7 +108,8 @@ export const UserContextProvider = ({ children }) => {
         getAllUser,
         addUserBackend,
         dispatch,
-        addUser
+        addUser,
+        logout
       }}
     >
       {children}
