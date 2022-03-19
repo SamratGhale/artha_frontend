@@ -29,12 +29,13 @@ export const PATH_PAGE = {
     app:
     {
       item_detail     : merge_path(ROOTS.app, '/items/:id'),
+      inventory       : merge_path(ROOTS.app, '/items'),
       customers       : merge_path(ROOTS.app, '/customers'),
       customer_details: merge_path(ROOTS.app, '/customers/:id'),
     },
     admin: 
     {
-      inventory    :merge_path(ROOTS.admin, '/items'),
+      inventory    :merge_path(ROOTS.admin, '/items/'),
       item_detail  :merge_path(ROOTS.admin, '/items/:id'),
       dashboard    :merge_path(ROOTS.admin, '/dashboard'),
       staffs       :merge_path(ROOTS.admin, '/staffs'),

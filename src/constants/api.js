@@ -5,5 +5,6 @@ const base_url = server_url + '/api/v1'
 
 module.exports={
     AUTH: base_url +'/auth',
-    USER: base_url + '/user'
+    USER: base_url + '/user',
+    INVENTORY: base_url + '/inventory',
 }

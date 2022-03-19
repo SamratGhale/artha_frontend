@@ -10,9 +10,9 @@ export async function login(payload) {
                 saveUser(res.data.user);
                 saveUserToken(res.data.token);
                 saveUserPermissions(res.data.permissions);
-                resolve({sucess: true, status: 200})
+                resolve({sucess: true, status: 200, data: res.data})
             }).catch((err)=>{
-                reject(err.response.data);
+                reject(err);
             });
     });
 }

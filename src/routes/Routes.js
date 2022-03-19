@@ -1,4 +1,4 @@
-import {ROOTS} from "./paths";
+import {PATH_APP, ROOTS} from "./paths";
 import DashBoardLayout from "../laylouts";
 import React from "react";
 import Home from '../home';
@@ -7,6 +7,8 @@ import { Redirect } from "react-router-dom";
 import Admin from '../home/admin'
 import AuthProtect from "../global/AuthProtect";
 import { ROLES } from "../constants";
+import Inventory from "../modules/inventory";
+import AdminInventory from "../modules/inventory/admin";
 
 const Routes = {
     path: '*',
@@ -33,6 +35,30 @@ const Routes = {
             component : (props)=>(
                 <ComponentWrapper {...props}>
                     <Home/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
+            path:PATH_APP.app.inventory, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Home',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <Inventory/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
+            path:PATH_APP.admin.inventory, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Home',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <AdminInventory/>
                 </ComponentWrapper>
             )
         },

@@ -4,13 +4,13 @@ import * as Service from './services';
 import API from '../../constants/api';
 import axios from 'axios';
 import { getUserToken } from '../../utils/sessionManager';
+import actions from './actions';
 const access_token = getUserToken();
 const USER = API.USER;
 
 const initialState = {
   user_info: {},
-  list: [],
-  pagination: { limit: 10, start: 0, total: 0, currentPage: 1, totalPages: 0 }
+  refresh: false
 };
 
 export const UserContext = createContext(initialState);
@@ -21,7 +21,9 @@ export const UserContextProvider = ({ children }) => {
      var form = new FormData();
      form.append("email", payload.email);
      form.append("password", payload.password);
-     return await Service.login(form);
+     const ret = await Service.login(form);
+     dispatch({type: actions.SET_USER, data: ret.data});
+     return ret;
   }
   function logout() {
     Service.logout();
