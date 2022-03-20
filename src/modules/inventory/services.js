@@ -13,7 +13,7 @@ export async function addItem(payload){
         });
         return res;
     } catch (err) {
-        console.error(err);
+        return err;
     }
 }
 

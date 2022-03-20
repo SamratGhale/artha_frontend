@@ -3,6 +3,7 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 import routes, { renderRoutes } from "./routes";
 import { UserContextProvider } from "./modules/users/context";
+import { InventoryContextProvider } from "./modules/inventory/context";
 //import Routes from "./routes/Routes";
 
 
@@ -11,9 +12,11 @@ function App() {
   return (
     <div>
       <UserContextProvider>
-        <Router history={history}>
-          {renderRoutes(routes)}
-        </Router>
+        <InventoryContextProvider>
+          <Router history={history}>
+            {renderRoutes(routes)}
+          </Router>
+        </InventoryContextProvider>
       </UserContextProvider>
     </div>
   );

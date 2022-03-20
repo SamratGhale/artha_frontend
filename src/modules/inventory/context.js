@@ -26,4 +26,16 @@ export const InventoryContextProvider = ({children})=>{
         const res = await Service.getAllItem();
         return res;
     }
+
+    return(
+        <InventoryContext.Provider
+        value={{
+            items: state.items,
+            addItem,
+            getAllItems,
+        }}
+        >
+            {children}
+        </InventoryContext.Provider>
+    )
 }
