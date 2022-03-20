@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { PATH_APP, PATH_PAGE, ROOTS } from '../routes/paths';
+import { PATH_PAGE, ROOTS } from '../routes/paths';
 import { getUser } from '../utils/sessionManager';
 
 AuthProtect.propTypes = {
@@ -25,7 +25,7 @@ function AuthProtect({ children, authorizedUsers }) {
         </div>
     )
   }
-  if(authorizedUsers.length==0){
+  if(authorizedUsers.length===0){
     return <>{children}</>;
   }
   if (authorizedUsers && authorizedUsers.includes(role)) {

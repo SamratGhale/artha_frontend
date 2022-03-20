@@ -79,15 +79,15 @@ export const renderRoutes = (routes = []) => {
               exact={route.exact}
               render={(props) => (
                 <Guard authorizedUsers={authorizedUsers}>
-                <Layout>
-                  {route.routes ? (
-                    renderRoutes(route.routes)
-                  ) : (
-                    <Component
-                      {...props}
-                    />
-                  )}
-                </Layout>
+                  <Layout>
+                    {route.routes ? (
+                      renderRoutes(route.routes)
+                    ) : (
+                      <Component
+                        {...props}
+                      />
+                    )}
+                  </Layout>
                 </Guard>
               )}
             />
@@ -107,7 +107,13 @@ const routes = [
   {
     exact: true,
     path: '/404',
-    component: lazy(()=>import('../views/misc/page404'))
+    component: lazy(() => import('../views/misc/page404'))
+  },
+  {
+    exact: true,
+    path: PATH_PAGE.auth.waitForApprove,
+    heading: 'Wait for approve',
+    component: lazy(() => import('../views/misc/waitForApprove'))
   },
   AppRoutes,
 ];

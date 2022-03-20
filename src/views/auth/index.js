@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from '@material-ui/core/Snackbar';
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -7,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwipeableViews from "react-swipeable-views";
 import Login from "./login";
+import SignUp from "./signup";
+import MuiAlert from '@material-ui/lab/Alert';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -22,6 +25,10 @@ function TabPanel(props) {
       <Box p={3}>{children}</Box>
     </Typography>
   );
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -45,11 +52,19 @@ export default function SimpleTabs() {
     setValue(index);
   };
 
+  const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [severnity, setSevernity] = useState("success");
+
+    const handleClose = () => {
+        setOpen(!open);
+    }
+
   return (
     <div className={classes.root}>
       <AppBar position="static" variant="elevation">
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Login"/>
+          <Tab label="Login" />
           <Tab label="Signup" />
         </Tabs>
       </AppBar>
@@ -59,12 +74,17 @@ export default function SimpleTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0}>
-        <Login/>
+          <Login />
         </TabPanel>
         <TabPanel value={value} index={1}>
-         Signup 
+          <SignUp handleClose={handleClose} setMessage={setMessage} setSevernity={setSevernity} />
         </TabPanel>
       </SwipeableViews>
+      <Snackbar anchorOrigin={{ horizontal:'right', vertical:'top'}} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severnity}>
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

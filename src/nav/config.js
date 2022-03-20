@@ -1,6 +1,6 @@
 import AuthProtectNav from "../views/auth/AuthProtectNav"
 import { ROLES } from "../constants";
-import { PATH_APP, PATH_HOME, PATH_PAGE, ROOTS } from "../routes/paths";
+import { PATH_APP, ROOTS } from "../routes/paths";
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 
 const navConfig = [

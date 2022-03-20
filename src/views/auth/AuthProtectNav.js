@@ -8,9 +8,12 @@ AuthProtectNav.propTypes = {
 
 function AuthProtectNav({children, authorizedUsers}) {
    const currentUser = getUser();
+   if(!currentUser){
+    return <div></div>;
+   }
    const {role} = currentUser; 
 
-  if(authorizedUsers.length==0){
+  if(authorizedUsers.length===0){
     return <>{children}</>;
   }
   if (authorizedUsers && authorizedUsers.includes(role)) {

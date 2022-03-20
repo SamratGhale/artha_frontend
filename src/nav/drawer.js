@@ -1,16 +1,14 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import { ROOTS } from '../routes/paths';
 import { UserContext } from '../modules/users/context';
+import { Drawer } from '@material-ui/core';
 import NavLinks from './config';
 
 
@@ -22,20 +20,13 @@ const useStyles = makeStyles({
         width: 'auto',
     },
 });
-function HomeIcon(props) {
-    return (
-        <SvgIcon {...props}>
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-        </SvgIcon>
-    );
-}
-const ListItemButton=(props)=>{
+const ListItemButton = (props) => {
     return <ListItem button component="a" {...props} />;
 }
 
 function renderNavItems({ items }) {
     return (
-        items.map(item=> {
+        items.map(item => {
             return (
                 <ListItemButton key={item.title} href={item.href}>
                     <ListItemIcon>{item.icon}</ListItemIcon>
@@ -47,10 +38,9 @@ function renderNavItems({ items }) {
     )
 }
 
-export default function Drawer({state, toggleOpenNav}) {
+export default function MainDrawer({state, toggleOpenNav}) {
     const classes = useStyles();
-
-    const {logout} = useContext(UserContext);
+    const { logout } = useContext(UserContext);
 
 
     const list = () => (
@@ -59,18 +49,19 @@ export default function Drawer({state, toggleOpenNav}) {
                 [classes.fullList]: false,
             })}
             role="presentation"
-            onClick={()=>{toggleOpenNav()}}
-            onKeyDown={()=>toggleOpenNav()}
+            onClick={() => { toggleOpenNav() }}
+            onKeyDown={() => toggleOpenNav()}
+            onMouseLeave={()=>{toggleOpenNav()}} 
         >
-            {NavLinks.map((list)=>{
+            {NavLinks.map((list) => {
                 const Guard = list.guard;
                 const authorizedUsers = list.roles || []
                 return (
-                    <Guard authorizedUsers={authorizedUsers}>
+                    <Guard key={list.items[0].title} authorizedUsers={authorizedUsers}>
                         <List>
-                        {renderNavItems({
-                            items: list.items
-                        })}
+                            {renderNavItems({
+                                items: list.items
+                            })}
                         </List>
                     </Guard>
                 )
@@ -85,16 +76,22 @@ export default function Drawer({state, toggleOpenNav}) {
         </div>
     );
 
-    return(
+    return (
         <div>
-                <SwipeableDrawer
-                    anchor={'left'}
-                    open={state}
-                    onClose={()=>{toggleOpenNav()}}
-                    onOpen={()=>{toggleOpenNav()}}
-                >
-                    {list()}
-                </SwipeableDrawer>
+            <Drawer
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                }}
+                anchor={'left'}
+                open={state}
+                variant="temporary"
+                classes={{
+                    paper: classes.drawerPaper,
+                  }}
+                onClose={() => { toggleOpenNav() }}
+            >
+                {list()}
+            </Drawer>
         </div>
     );
 }

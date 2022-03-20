@@ -28,6 +28,9 @@ export const UserContextProvider = ({ children }) => {
   function logout() {
     Service.logout();
   }
+  async function getAllRoles(){
+    return Service.getAllRoles();
+  }
   async function verifyToken(token) {
     return new Promise((resolve, reject) => {
       Service.verifyToken(token)
@@ -48,7 +51,7 @@ export const UserContextProvider = ({ children }) => {
     return await Service.addUser(form);
   }
 
-  async function addUserAndApprove(contract, payload) {
+  async function addUserAndApprove(payload) {
     try {
       await axios.post(
         USER+ `/${payload.address}/approve`,
@@ -111,7 +114,8 @@ export const UserContextProvider = ({ children }) => {
         addUserBackend,
         dispatch,
         addUser,
-        logout
+        logout,
+        getAllRoles
       }}
     >
       {children}

@@ -40,6 +40,18 @@ const Routes = {
         },
         {
             exact: true,
+            path:'/', 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Home',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <Home/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
             path:PATH_APP.app.inventory, 
             roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
             guard: AuthProtect,

@@ -37,9 +37,9 @@ const Login = () => {
             style={{ minHeight: '100vh' }}
         >
             <form className={classes.root} autoComplete="off">
-                <TextField value={email} type={"email"} onChange={(e)=>{setEmail(e.target.value)}} id="outlined-basic" label="email" variant="outlined" />
+                <TextField id="loginemail" value={email} type={"email"} onChange={(e)=>{setEmail(e.target.value)}}  label="email" variant="outlined" />
                 <br></br>
-                <TextField value={password} type={"password"} onChange={(e)=>{setPassword(e.target.value)}} id="outlined-basic" label="password" variant="outlined" />
+                <TextField id = "loginpassword" value={password} type={"password"} onChange={(e)=>{setPassword(e.target.value)}} label="password" variant="outlined" />
                 <br></br>
                 <Button
                     onClick={handleLogin}

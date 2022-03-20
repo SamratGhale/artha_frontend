@@ -7,4 +7,5 @@ module.exports={
     AUTH: base_url +'/auth',
     USER: base_url + '/user',
     INVENTORY: base_url + '/inventory',
+    ROLES: base_url + '/roles',
 }
