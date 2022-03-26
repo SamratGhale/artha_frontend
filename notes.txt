@@ -1,0 +1,6 @@
+todo:
+add selected items to cart 
+
+backend: 
+new modal for transaction
+new modal for brands/companies

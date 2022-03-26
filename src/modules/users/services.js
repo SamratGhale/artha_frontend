@@ -41,7 +41,7 @@ export async function addUser(payload) {
 
 export async function getAllUser(payload) {
     try {
-        const res = await axios.get(USER, payload, {
+        const res = await axios.get(USER, payload,{}, {
             headers: {
                 'access_token': access_token
             }
@@ -57,7 +57,6 @@ export async function getAllRoles() {
         const res = await axios.get(ROLES);
         return res.data.data;
     } catch (err) {
-        console.log(err);
         return err;
     }
 }

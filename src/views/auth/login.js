@@ -15,16 +15,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Login = () => {
+const Login = ({handleClose, setMessage, setSevernity}) => {
     const classes = useStyles();
     const {userLogin} = useContext(UserContext);
     const history = useHistory();
     const handleLogin=async()=>{
         try{
             await userLogin({email, password});
+            setMessage("Login successful");
+            setSevernity("success");
+            handleClose();
             history.push(ROOTS.app)
         }catch(err){
-            console.error(err);
+            setSevernity("error");
+            setMessage(err.response.data.message);
+            handleClose();
         }
     }
     const [email, setEmail] = useState("");

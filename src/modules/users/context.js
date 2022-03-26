@@ -67,7 +67,6 @@ export const UserContextProvider = ({ children }) => {
   }
   async function addUserBackend(payload) {
     const { file, userDetails } = payload;
-    console.log(JSON.stringify(userDetails));
     if (file == null) {
       return 'no identify file selected';
     }
@@ -81,12 +80,10 @@ export const UserContextProvider = ({ children }) => {
       axios
         .post(USER, formData, config)
         .then((res) => {
-          console.log(res);
           return 'User added successfully!';
         })
         .catch((err) => {});
     } catch (err) {
-      console.log(err);
       if (err.data) {
         let arr = err.data.message.split(':');
         return arr[1];

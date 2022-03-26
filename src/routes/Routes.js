@@ -9,6 +9,8 @@ import AuthProtect from "../global/AuthProtect";
 import { ROLES } from "../constants";
 import Inventory from "../modules/inventory";
 import AdminInventory from "../modules/inventory/admin";
+import ItemDetail from "../modules/inventory/details/itemDetail";
+import AddItems from "../modules/inventory/add";
 
 const Routes = {
     path: '*',
@@ -64,13 +66,37 @@ const Routes = {
         },
         {
             exact: true,
-            path:PATH_APP.admin.inventory, 
+            path:PATH_APP.admin.add, 
             roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
             guard: AuthProtect,
             heading: 'Home',
             component : (props)=>(
                 <ComponentWrapper {...props}>
                     <AdminInventory/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
+            path:PATH_APP.app.item_add, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Bulk Upload',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <AddItems/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
+            path:PATH_APP.app.item_detail, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Home',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <ItemDetail {...props}/>
                 </ComponentWrapper>
             )
         },
