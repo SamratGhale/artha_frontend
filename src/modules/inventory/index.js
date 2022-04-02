@@ -1,12 +1,20 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Cart from "./cart";
+import LocalAtmSharpIcon from '@material-ui/icons/LocalAtmSharp';
+import StorefrontSharpIcon from '@material-ui/icons/StorefrontSharp';
 import AppBar from "@material-ui/core/AppBar";
+import { SnackbarProvider } from 'notistack';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwipeableViews from "react-swipeable-views";
 import ListItems from './items/index'
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import { Grid } from "@material-ui/core";
+import CheckOut from "./checkout";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -51,26 +59,45 @@ export default function Inventory() {
     <div className={classes.root}>
       <AppBar position="static" variant="elevation">
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Inventory"/>
-          <Tab label="Cart" />
-          <Tab label="Checkout" />
+          <Tab label={
+            <Grid>
+              <Typography variant="body1">Inventory</Typography>
+              <StorefrontSharpIcon />
+            </Grid>
+          }
+          />
+          <Tab label={
+            <Grid>
+              <Typography variant="body1">Cart</Typography>
+              <AddShoppingCartIcon />
+            </Grid>
+          }
+          />
+          <Tab label={
+            <Grid>
+              <Typography variant="body1">Checkout</Typography>
+              <LocalAtmSharpIcon />
+            </Grid>
+          } />
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={classes.direction === "rtl" ? "x-reverse" : "x"}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0}>
-        <ListItems/>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Cart
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          Checkout 
-        </TabPanel>
-      </SwipeableViews>
+      <SnackbarProvider maxSnack={5}>
+        <SwipeableViews
+          axis={classes.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+        >
+          <TabPanel value={value} index={0}>
+            <ListItems />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <Cart />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <CheckOut/>
+          </TabPanel>
+        </SwipeableViews>
+      </SnackbarProvider>
     </div>
   );
 }

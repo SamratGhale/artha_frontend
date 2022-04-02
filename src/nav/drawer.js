@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -69,7 +70,7 @@ export default function MainDrawer({state, toggleOpenNav}) {
             <Divider />
             <List>
                 <ListItemButton key={"Logout"} onClick={logout}>
-                    <ListItemIcon> <InboxIcon /> </ListItemIcon>
+                    <ListItemIcon> <ExitToAppIcon/> </ListItemIcon>
                     <ListItemText primary={"Logout"} />
                 </ListItemButton>
             </List>

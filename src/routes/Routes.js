@@ -18,6 +18,18 @@ const Routes = {
     routes:[
         {
             exact: true,
+            path:PATH_APP.admin.item_add, 
+            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            heading: 'Bulk Upload',
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <AddItems/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
             path:ROOTS.admin, 
             heading:'Admin',
             roles:[ROLES.ADMIN, ROLES.SUPER_ADMIN],
@@ -73,18 +85,6 @@ const Routes = {
             component : (props)=>(
                 <ComponentWrapper {...props}>
                     <AdminInventory/>
-                </ComponentWrapper>
-            )
-        },
-        {
-            exact: true,
-            path:PATH_APP.app.item_add, 
-            roles:[ROLES.STAFF, ROLES.ADMIN, ROLES.SUPER_ADMIN],
-            guard: AuthProtect,
-            heading: 'Bulk Upload',
-            component : (props)=>(
-                <ComponentWrapper {...props}>
-                    <AddItems/>
                 </ComponentWrapper>
             )
         },

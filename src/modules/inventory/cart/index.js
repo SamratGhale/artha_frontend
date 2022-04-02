@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import AddToCartModal from '../cart/addToCartModal';
+import ItemDetailModal from "../items/details/itemDetailModal";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -23,8 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Button } from "@material-ui/core";
 import { InventoryContext } from "../context";
-import { PATH_APP } from "../../../routes/paths";
-import ItemDetailModal from "./details/itemDetailModal";
+import EditQuantity from "./editQtyModal";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -54,13 +53,13 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: "item_name", numeric: false, disablePadding: true, label: "Name" },
+  { id: "item_code", numeric: true, disablePadding: false, label: "Code" },
   {
     id: "item_price",
     numeric: true,
     disablePadding: false,
     label: "Price (Rs.)",
   },
-  { id: "item_code", numeric: true, disablePadding: false, label: "Code" },
   {
     id: "discount",
     numeric: true,
@@ -71,11 +70,32 @@ const headCells = [
     id: "quantity",
     numeric: true,
     disablePadding: false,
-    label: "Quantity Available",
+    label: "Quantity",
   },
-  { id: "brand", numeric: true, disablePadding: false, label: "Brand" },
-  { id: "details", numeric: false, disablePadding: false, label: "Details" },
-  { id: "Add", numeric: false, disablePadding: false, label: "Add to cart" },
+  {
+    id: "vat",
+    numeric: true,
+    disablePadding: false,
+    label: "Vat %",
+  },
+  {
+    id: "total prize",
+    numeric: true,
+    disablePadding: false,
+    label: "Total Price(Rs.)",
+  },
+  {
+    id: "details",
+    numeric: false,
+    disablePadding: false,
+    label: "Details",
+  },
+  {
+    id: "edit",
+    numeric: false,
+    disablePadding: false,
+    label: "Edit qty",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -234,7 +254,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function Cart() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [item, setItem] = useState({});
@@ -243,14 +263,14 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [editOpen, setEditOpen] = useState(false);
 
-  const { items, refreshData, refresh } = useContext(InventoryContext);
+  const { cartItems, refreshData, refresh } = useContext(InventoryContext);
   useEffect(() => {
     refreshData();
   }, [refresh]);
 
   const [open, setOpen] = React.useState(false);
-  const [openCartModal, setOpenCartModal] = React.useState(false);
 
   const handleOpen = () => {
     setOpen(true);
@@ -260,12 +280,12 @@ export default function EnhancedTable() {
     setOpen(false);
   };
 
-  const handleCartOpen = () => {
-    setOpenCartModal(true);
+  const handleEditOpen = () => {
+    setEditOpen(true);
   };
 
-  const handleCartClose = () => {
-    setOpenCartModal(false);
+  const handleEditClose = () => {
+    setEditOpen(false);
   };
 
   const handleRequestSort = (event, property) => {
@@ -276,7 +296,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = items.map((n) => n.item_code);
+      const newSelecteds = cartItems.map((n) => n.item_code);
       setSelected(newSelecteds);
       return;
     }
@@ -318,151 +338,149 @@ export default function EnhancedTable() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const handleDetail = (id) => {
-    window.location = PATH_APP.app.inventory + `/${id}`;
-  };
-
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, cartItems.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={items.length}
-            />
-            <TableBody>
-              {stableSort(items, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.item_code);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+      {cartItems.length > 0 ? (
+        <div>
+          <Paper className={classes.paper}>
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.item_code}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={(event) => handleClick(event, row.item_code)}
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        <Typography variant="body1">{row.item_name}</Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="body1">
-                          {row.item_price}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        {" "}
-                        <Typography variant="body1">
-                          {row.item_code}{" "}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        {" "}
-                        <Typography variant="body1">{row.discount} </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        {" "}
-                        <Typography variant="body1">{row.quantity} </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        {" "}
-                        <Typography variant="body1">{row.brand} </Typography>
-                      </TableCell>
-                      <TableCell align="left">
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            setItem(row);
-                            handleOpen()
-                          }}
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer>
+              <Table
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                size={dense ? "small" : "medium"}
+                aria-label="enhanced table"
+              >
+                <EnhancedTableHead
+                  classes={classes}
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={cartItems.length}
+                />
+                <TableBody>
+                  {stableSort(cartItems, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.item_code);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.item_code}
+                          selected={isItemSelected}
                         >
-                          <Typography variant="button">Details </Typography>
-                        </Button>
-                      </TableCell>
-                      <TableCell align="left">
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            setItem(row);
-                            handleCartOpen();
-                          }}
-                        >
-                          <Typography variant="button">Add to cart</Typography>
-                        </Button>
-                      </TableCell>
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              onClick={(event) => handleClick(event, row.item_code)}
+                              checked={isItemSelected}
+                              inputProps={{ "aria-labelledby": labelId }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            <Typography variant="body1">{row.item_name}</Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            <Typography variant="body1">
+                              {row.item_code}{" "}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Typography variant="body1">
+                              {row.item_price}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            <Typography variant="body1">{row.discount} </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            <Typography variant="body1">{row.cartQuantity} </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            <Typography variant="body1">{row.vat}</Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            {" "}
+                            <Typography variant="body1">Total Price here </Typography>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                setItem(row);
+                                handleOpen()
+                              }}
+                            >
+                              <Typography variant="button">Details </Typography>
+                            </Button>
+                          </TableCell>
+                          <TableCell align="left">
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                setItem(row);
+                                handleEditOpen();
+                              }}
+                            >
+                              <Typography variant="button">Edit qty</Typography>
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={items.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={(e) => {
-          e.preventDefault();
-          window.location = PATH_APP.admin.item_add;
-        }}
-      >
-        Add items
-      </Button>
-      <ItemDetailModal
-        item={item}
-        open={open}
-        handleClose={handleClose}
-        handleOpen={handleOpen}
-      />
-      <AddToCartModal item={item} open={openCartModal} handleClose={handleCartClose} handleOpen={handleCartOpen} />
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={cartItems.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+          <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+          />
+          <ItemDetailModal
+            item={item}
+            open={open}
+            handleClose={handleClose}
+            handleOpen={handleOpen}
+          />
+          <EditQuantity open={editOpen} handleOpen={handleEditOpen} handleClose={handleEditClose} item={item} />
+        </div>
+
+      ) : (
+        <Typography variant="h4">Cart empty</Typography>
+      )}
     </div>
   );
 }

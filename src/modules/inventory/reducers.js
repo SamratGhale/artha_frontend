@@ -6,6 +6,8 @@ const reducer= (state, action)=>{
         return {...state, items:action.data}
     case actions.REGRESH_DATA:
         return {...state, refresh: action.data}
+    case actions.SET_CART_DATA:
+        return {...state, cartItems: action.data}
     }
 }
 export default reducer;
