@@ -1,13 +1,8 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import userReduce from './reducers';
 import * as Service from './services';
-import API from '../../constants/api';
-import axios from 'axios';
-import { getUserToken } from '../../utils/sessionManager';
 import * as FILTER from '../../constants/inventory';
 import * as actions from './actions';
-const access_token = getUserToken();
-
 
 const initialState = {
     items: [],
@@ -22,7 +17,7 @@ export const InventoryContextProvider = ({children})=>{
     const [state, dispatch] = useReducer(userReduce, initialState);
 
     async function addItem(payload) {
-       const form = Object.entries(payload).reduce((d,e) => (d.append(...e),d), new FormData())
+       const form = Object.entries(payload).reduce((d,e) => (d.append(...e),d), new FormData());
        const res =await Service.addItem(form);
        return res; 
     }

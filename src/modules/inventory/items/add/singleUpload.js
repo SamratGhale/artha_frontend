@@ -1,16 +1,12 @@
 import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 import {
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@material-ui/core";
 import { Button } from "@material-ui/core";
-import { InventoryContext } from "../context";
+import { InventoryContext } from "../../context";
 
 const useStyles = makeStyles((theme) => ({
   root: {

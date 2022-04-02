@@ -6,8 +6,7 @@ import {
   Modal
 } from '@material-ui/core';
 import readXlsxFile from 'read-excel-file';
-import { SnackbarProvider, useSnackbar } from 'notistack';
-
+import { useSnackbar } from 'notistack';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,14 +16,9 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from "@material-ui/core";
 import UploadExcel from "./excelUpload";
-import { InventoryContext } from "../context";
-import MuiAlert from '@material-ui/lab/Alert';
+import { InventoryContext } from "../../context";
 
 
-
-function SnackAlert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
   const columns= [
     { id: "item_name", numeric: false, disablePadding: true, label: "Name" },
     {
@@ -116,7 +110,6 @@ const BulkUpload = () => {
     return { item_name ,item_price,  item_code , discount, quantity, item_description, category, vat, brand, addInfo};
   }
   const [formatError, setFormatError] = useState(false);
-  const [openSnack, setOpenSnack ] = useState(false);
 
   const {addItem} = useContext(InventoryContext);
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -22,8 +22,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Button } from "@material-ui/core";
 import { InventoryContext } from "../context";
-import { ROLES } from "../../../constants";
 import { PATH_APP } from "../../../routes/paths";
+import ItemDetailModal from "./details/itemDetailModal";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -66,9 +66,9 @@ const headCells = [
     disablePadding: false,
     label: "Discount (%)",
   },
-  { id: "category", numeric: true, disablePadding: false, label: "Category" },
   { id: "brand", numeric: true, disablePadding: false, label: "Brand" },
   { id: "details", numeric: false, disablePadding: false, label: "Details" },
+  { id: "Add", numeric: false, disablePadding: false, label: "Add to cart" },
 ];
 
 function EnhancedTableHead(props) {
@@ -108,7 +108,7 @@ function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              <Typography variant="h6">{headCell.label}</Typography>
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -230,6 +230,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
+  const [item ,setItem] = useState({});
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -240,6 +241,16 @@ export default function EnhancedTable() {
   useEffect(() => {
     refreshData();
   }, [refresh]);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -328,7 +339,6 @@ export default function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.item_code)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -337,6 +347,7 @@ export default function EnhancedTable() {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
+                          onClick={(event) => handleClick(event, row.item_code)}
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
@@ -347,20 +358,44 @@ export default function EnhancedTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.item_name}
+                        <Typography variant="body1">{row.item_name}</Typography>
                       </TableCell>
-
-                      <TableCell align="right">{row.item_price}</TableCell>
-                      <TableCell align="right">{row.item_code}</TableCell>
-                      <TableCell align="right">{row.discount}</TableCell>
-                      <TableCell align="right">{row.category}</TableCell>
-                      <TableCell align="right">{row.brand}</TableCell>
+                      <TableCell align="right">
+                        <Typography variant="body1">
+                          {row.item_price}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        {" "}
+                        <Typography variant="body1">
+                          {row.item_code}{" "}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        {" "}
+                        <Typography variant="body1">{row.discount} </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                        {" "}
+                        <Typography variant="body1">{row.brand} </Typography>
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button
+                          variant="contained"
+                          onClick={()=>{
+                            setItem(row);
+                            handleOpen()
+                          }}
+                        >
+                          <Typography variant="button">Details </Typography>
+                        </Button>
+                      </TableCell>
                       <TableCell align="left">
                         <Button
                           variant="contained"
                           onClick={(e) => handleDetail(row._id)}
                         >
-                          Details
+                          <Typography variant="button">Add to cart</Typography>
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -398,6 +433,12 @@ export default function EnhancedTable() {
       >
         Add items
       </Button>
+      <ItemDetailModal
+        item={item}
+        open={open}
+        handleClose={handleClose}
+        handleOpen={handleOpen}
+      />
     </div>
   );
 }

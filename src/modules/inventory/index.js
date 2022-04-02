@@ -6,7 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwipeableViews from "react-swipeable-views";
-import ListItems from './details/index'
+import ListItems from './items/index'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 

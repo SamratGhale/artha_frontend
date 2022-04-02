@@ -8,9 +8,9 @@ import Admin from '../home/admin'
 import AuthProtect from "../global/AuthProtect";
 import { ROLES } from "../constants";
 import Inventory from "../modules/inventory";
-import AdminInventory from "../modules/inventory/admin";
-import ItemDetail from "../modules/inventory/details/itemDetail";
-import AddItems from "../modules/inventory/add";
+import AdminInventory from "../modules/admin";
+import ItemDetail from "../modules/inventory/items/details/itemDetail";
+import AddItems from "../modules/inventory/items/add";
 
 const Routes = {
     path: '*',

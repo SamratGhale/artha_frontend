@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { SnackbarProvider, useSnackbar } from 'notistack';
-import Snackbar from "@material-ui/core/Snackbar";
+import { SnackbarProvider} from 'notistack';
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwipeableViews from "react-swipeable-views";
-import MuiAlert from "@material-ui/lab/Alert";
 import DropzoneAreaExample from "./bulkUpload";
 import SingleUpload from "./singleUpload";
 
@@ -27,10 +25,6 @@ function TabPanel(props) {
       <Box p={3}>{children}</Box>
     </Typography>
   );
-}
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -52,14 +46,6 @@ const AddItems=() =>{
   };
   const handleChangeIndex = (index) => {
     setValue(index);
-  };
-
-  const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
-  const [severnity, setSevernity] = useState("success");
-
-  const handleClose = () => {
-    setOpen(!open);
   };
 
   return (
