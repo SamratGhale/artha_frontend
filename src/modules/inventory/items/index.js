@@ -82,7 +82,7 @@ function QuickSearchToolbar(props) {
 
 
 export default function EnhancedTable() {
-  const { items } = useContext(InventoryContext);
+  const { items, refreshData } = useContext(InventoryContext);
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState('');
 
@@ -111,6 +111,7 @@ export default function EnhancedTable() {
     c.headerAlign='center'
   })
   useEffect(() => {
+    refreshData()
     const d = []
     items.map(item => {
       item.id = item._id;

@@ -13,8 +13,6 @@ import { InventoryContext } from '../context';
 import { useSnackbar } from 'notistack';
 import ItemDetailModal from '../items/details/itemDetailModal';
 
-
-
 const useStyles = makeStyles((theme) => ({
     modal: {
         display: 'flex',
@@ -42,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddToCartModal({ item, open, handleClose }) {
     const classes = useStyles();
-    const { addToCart } = useContext(InventoryContext);
+    const {  addToCart } = useContext(InventoryContext);
     const [quantity, setQuantity] = useState(1);
     const [detailOpen, setDetailOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
@@ -77,7 +75,7 @@ export default function AddToCartModal({ item, open, handleClose }) {
                                     <Button size="medium" onClick={() => {
                                         const res = addToCart(item, quantity);
                                         if (res.success) {
-                                            enqueueSnackbar(`Added ${quantity} ${item.item_name} to cart!`, { variant: 'success' })
+                                            enqueueSnackbar(res.message, { variant: 'success' })
                                         } else {
                                             enqueueSnackbar(res.message, { variant: 'error' })
                                         }

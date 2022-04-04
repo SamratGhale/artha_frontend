@@ -120,6 +120,18 @@ export const InventoryContextProvider = ({ children }) => {
     }
   }, [state.refresh]);
 
+  useEffect(()=>{
+    var newItem =state.cartItems;
+    newItem.forEach(e=>{
+      var item = e;
+      var total = Number(e.cartQuantity) * Number(e.item_price);
+      total = total - (Number(e.discount)/100 *  total);
+      total = total + (Number(e.vat)/100 *  total)
+      e.total = total;
+    })
+    dispatch({ type: actions.SET_CART_DATA, data: newItem})
+  },[JSON.stringify(state.cartItems)])
+
   return (
     <InventoryContext.Provider
       value={{
@@ -129,7 +141,7 @@ export const InventoryContextProvider = ({ children }) => {
         refreshData,
         addToCart,
         cartItems: state.cartItems,
-        removeFromCart
+        removeFromCart,
       }}
     >
       {children}

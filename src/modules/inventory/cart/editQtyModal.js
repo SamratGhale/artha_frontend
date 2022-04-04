@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
+import ItemDetailModal from '../items/details/itemDetailModal';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -44,6 +45,11 @@ export default function EditQuantity({ item, open, handleClose, handleOpen }) {
     const {removeFromCart} = useContext(InventoryContext);
     const [quantity, setQuantity] = useState(0);
     const { enqueueSnackbar } = useSnackbar();
+    const [detailOpen, setDetailOpen] = useState(false);
+
+    const handleDetail = () => {
+        setDetailOpen(!detailOpen);
+    }
 
     useEffect(()=>{
         setQuantity(item.cartQuantity);
@@ -83,12 +89,18 @@ export default function EditQuantity({ item, open, handleClose, handleOpen }) {
                                     }}>
                                         <Typography variant="button">Okay</Typography>
                                     </Button>
+                                    <Button size="medium" onClick={() => {
+                                        handleDetail();
+                                    }}>
+                                        <Typography variant="button">See Item Detail</Typography>
+                                    </Button>
                                 </CardActions>
                             </CardContent>
                         </Card>
                     </div>
                 </Fade>
             </Modal>
+            <ItemDetailModal item={item} open={detailOpen} handleClose={handleDetail} />
         </div>
     );
 }
