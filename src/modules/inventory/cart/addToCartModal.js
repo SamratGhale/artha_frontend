@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { InventoryContext } from '../context';
 import { useSnackbar } from 'notistack';
+import ItemDetailModal from '../items/details/itemDetailModal';
 
 
 
@@ -39,11 +40,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function AddToCartModal({ item, open, handleClose, handleOpen }) {
+export default function AddToCartModal({ item, open, handleClose }) {
     const classes = useStyles();
-    const {addToCart} = useContext(InventoryContext);
+    const { addToCart } = useContext(InventoryContext);
     const [quantity, setQuantity] = useState(1);
+    const [detailOpen, setDetailOpen] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+
+    const handleDetail = () => {
+        setDetailOpen(!detailOpen);
+    }
 
     return (
         <div>
@@ -64,19 +70,24 @@ export default function AddToCartModal({ item, open, handleClose, handleOpen }) 
                         <Card className={classes.root} variant="outlined">
                             <CardContent>
                                 <Typography variant="h5" gutterBottom>{item.item_name}</Typography>
-                                <TextField id="outlined-basic" value={quantity} onChange={(e)=>{
+                                <TextField id="outlined-basic" value={quantity} onChange={(e) => {
                                     setQuantity(e.target.value);
                                 }} label="Enter quantity to add " variant="outlined" type="number" />
                                 <CardActions>
-                                    <Button size="medium" onClick={()=>{
+                                    <Button size="medium" onClick={() => {
                                         const res = addToCart(item, quantity);
-                                        if(res.success){
+                                        if (res.success) {
                                             enqueueSnackbar(`Added ${quantity} ${item.item_name} to cart!`, { variant: 'success' })
-                                        }else{
+                                        } else {
                                             enqueueSnackbar(res.message, { variant: 'error' })
                                         }
                                     }}>
                                         <Typography variant="button">Add</Typography>
+                                    </Button>
+                                    <Button size="medium" onClick={() => {
+                                        handleDetail();
+                                    }}>
+                                        <Typography variant="button">See Item Detail</Typography>
                                     </Button>
                                 </CardActions>
                             </CardContent>
@@ -84,6 +95,7 @@ export default function AddToCartModal({ item, open, handleClose, handleOpen }) 
                     </div>
                 </Fade>
             </Modal>
+            <ItemDetailModal item={item} open={detailOpen} handleClose={handleDetail} />
         </div>
     );
 }

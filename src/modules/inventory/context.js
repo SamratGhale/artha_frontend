@@ -79,7 +79,7 @@ export const InventoryContextProvider = ({ children }) => {
 
     const oldQuantity = Number(item.cartQuantity);
 
-    const availableQuantity = Number(invItem.quantity);
+    const availableQuantity = Number(invItem[0].quantity);
 
     if (newQuantity > oldQuantity + availableQuantity) {
       return { success: false, message: "quanity not available" }

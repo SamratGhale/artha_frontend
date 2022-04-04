@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
   },
   root: {
-    minWidth: 275,
+    minWidth: 300,
     backgroundColor:'#0f8441'
   },
   bullet: {
@@ -36,9 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ItemDetailModal({ item, open, handleClose, handleOpen }) {
+export default function ItemDetailModal({ item, open, handleClose}) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
 
 
   return (
@@ -92,6 +91,9 @@ export default function ItemDetailModal({ item, open, handleClose, handleOpen })
               </CardContent>
               <CardActions>
                 <Button size="small">Edit</Button>
+                <Button size="small" onClick={()=>{
+                  handleClose();
+                }}>Close</Button>
               </CardActions>
             </Card>
           </div>
