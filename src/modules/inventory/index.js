@@ -73,12 +73,6 @@ export default function Inventory() {
             </Grid>
           }
           />
-          <Tab label={
-            <Grid>
-              <Typography variant="body1">Checkout</Typography>
-              <LocalAtmSharpIcon />
-            </Grid>
-          } />
         </Tabs>
       </AppBar>
       <SnackbarProvider maxSnack={5}>
@@ -92,9 +86,6 @@ export default function Inventory() {
           </TabPanel>
           <TabPanel value={value} index={1}>
             <Cart />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <CheckOut/>
           </TabPanel>
         </SwipeableViews>
       </SnackbarProvider>

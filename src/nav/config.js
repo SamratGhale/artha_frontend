@@ -35,7 +35,7 @@ const navConfig = [
             },
             {
                 title: 'Add Items',
-                href: PATH_APP.admin.inventory,
+                href: PATH_APP.admin.item_add,
                 icon: <AddIcon/>
             }
 

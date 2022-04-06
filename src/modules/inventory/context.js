@@ -3,6 +3,7 @@ import userReduce from './reducers';
 import * as Service from './services';
 import * as FILTER from '../../constants/inventory';
 import * as actions from './actions';
+import { getUser } from '../../utils/sessionManager';
 
 const initialState = {
   items: [],
@@ -22,6 +23,23 @@ export const InventoryContextProvider = ({ children }) => {
     const res = await Service.addItem(form);
     return res;
   }
+  function toFormData(o) {
+    return Object.entries(o).reduce((d,e) => (d.append(...e),d), new FormData())
+  }
+
+  async function createInvoice(payload){
+    const user = getUser();
+    payload.staff_id = user._id;
+    const form = toFormData(payload);
+    const ret = await Service.createInvoice(form);
+    console.log(ret)
+
+    const cart = state.cartItems;
+
+    cart.forEach(async(i)=>{
+      await Service.addToInvoice(ret.data._id, toFormData({item_id: i._id, cartQuantity: i.cartQuantity}));
+    })
+  }
 
   async function getAllItems() {
     const res = await Service.getAllItem();
@@ -29,6 +47,82 @@ export const InventoryContextProvider = ({ children }) => {
   }
   async function refreshData() {
     dispatch({ type: actions.REGRESH_DATA, data: true })
+  }
+
+  function getDocumentArray(){
+    const items = [['','','','']]
+    var total = 0;
+    const cart = state.cartItems;
+    for (let index = 0; index < cart.length; index++) {
+      const item = cart[index];
+      items[index] = []
+      items[index].push(item.item_name)
+      items[index].push(item.item_price.toString())
+      items[index].push(item.cartQuantity.toString())
+      items[index].push(item.total.toString())
+      total += item.total;
+    }
+    return {items, total};
+  }
+
+  //for pdf generation of invoice
+  function getDocumentDefination(){
+    const arr = getDocumentArray();
+    const items = arr.items;
+    var dd = {
+      content: [
+        { text: 'Artha', style: 'header' },
+        { text: 'Sales Invoice', style: 'anotherStyle' },
+        {text:"SI = ", style:"si"},
+        {text:"Samrat Ghale", style:"customer"},
+        
+        {
+            layout: 'lightHorizontalLines', // optional
+          table: {
+            // headers are automatically repeated if the table spans over multiple pages
+            // you can declare how many rows should be treated as headers
+            headerRows: 1,
+            widths: [ '*', 100, 100, '*' ],
+    
+            body: [
+              [ 'Item Name', 'Unit Price (Rs)', 'Quantity', 'Amount' ],
+              ...items,
+              [ "", '', {text:"Sub otal", bold: true}, 'Val 4' ],
+              [ "", '', {text:"Total", bold: true}, 'Val 4' ]
+            ]
+          },
+          style:'table'
+        },
+        { text: 'Sales Invoice', style: 'footer' },
+        
+        
+      ],
+    
+      styles: {
+        header: {
+          fontSize: 40,
+          bold: true,
+          alignment:'center'
+        },
+        anotherStyle: {
+          italics: true,
+          alignment: 'center',
+          lineHeight:2
+        },
+            customer: {
+          alignment: 'left',
+          lineHeight:3
+        },
+        table:{
+          lineHeight:2 
+        },
+        footer: {
+          alignment: 'right',
+          lineHeight:5
+        }
+      }
+    };
+    return dd;
   }
 
   function addToCart(item, quantity) {
@@ -142,6 +236,8 @@ export const InventoryContextProvider = ({ children }) => {
         addToCart,
         cartItems: state.cartItems,
         removeFromCart,
+        getDocumentDefination,
+        createInvoice,
       }}
     >
       {children}

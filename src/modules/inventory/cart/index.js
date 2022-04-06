@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { createTheme, ThemeProvider } from "@material-ui/core";
+import { Button, createTheme, ThemeProvider } from "@material-ui/core";
 import { InventoryContext } from "../context";
 import { Typography } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
@@ -14,6 +14,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import EditQuantity from "./editQtyModal";
+import CheckOut from "../checkout";
 
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -86,12 +87,12 @@ export default function Cart() {
   const [data, setData] = useState([]);
 
   var columns = [
-    { field: "item_name", flex:1, headerName: "Name"},
-    { field: "item_price",flex:1, type: "number", padding:"left", headerName: "Price (Rs.)"},
-    { field: "vat", type:"number", flex:1,headerName: "Vat %"},
-    { field: "discount", flex:1,type: "number", headerName: "Discount %"},
-    { field: "cartQuantity", flex:1, type:"number", headerName: "Quantity" },
-    { field: "total", flex:1,headerName: "Total" },
+    { field: "item_name", flex: 1, headerName: "Name" },
+    { field: "item_price", flex: 1, type: "number", padding: "left", headerName: "Price (Rs.)" },
+    { field: "vat", type: "number", flex: 1, headerName: "Vat %" },
+    { field: "discount", flex: 1, type: "number", headerName: "Discount %" },
+    { field: "cartQuantity", flex: 1, type: "number", headerName: "Quantity" },
+    { field: "total", flex: 1, headerName: "Total" },
   ]
   //{ field: "Add", headerName: "Add", width: 200 },
   const theme = createTheme();
@@ -107,12 +108,12 @@ export default function Cart() {
     c.renderHeader = () => {
       return <Typography variant="h6" >{c.headerName}</Typography>
     }
-    c.headerAlign='center'
+    c.headerAlign = 'center'
   })
   const [total, setTotal] = useState(0);
   useEffect(() => {
     const d = []
-    var total =0 ;
+    var total = 0;
     cartItems.map(item => {
       console.log(item.total);
       item.id = item._id;
@@ -143,28 +144,38 @@ export default function Cart() {
 
   const [searchText, setSearchText] = React.useState('');
 
+  const [checkoutOpen, setCheckoutOepn] = useState(false);
+
+  const handleCheckoutClose = () => {
+    setCheckoutOepn(!checkoutOpen);
+  }
+
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
-      <DataGrid autoHeight 
+    <div>
+      <div style={{ height: 600, width: '100%' }}>
+        <DataGrid autoHeight
 
-      style={{'backgroundColor':'#9e9780'}}
-        components={{ Toolbar: QuickSearchToolbar }}
-        onRowDoubleClick={(s) => {
-          if(s.id == 'totalrow')return;
-          const i = cartItems.filter(e => e._id == s.id);
-          setItem(i[0]);
-          handleClose();
-        }} rows={[...data,{id:'totalrow',item_name:"Grand Total",  total:total}]} columns={columns}
-        componentsProps={{
-          toolbar: {
-            value: searchText,
-            onChange: (event) => requestSearch(event.target.value),
-            clearSearch: () => requestSearch(''),
-          },
-        }}
-      />
+          style={{ 'backgroundColor': '#9e9780' }}
+          components={{ Toolbar: QuickSearchToolbar }}
+          onRowDoubleClick={(s) => {
+            if (s.id == 'totalrow') return;
+            const i = cartItems.filter(e => e._id == s.id);
+            setItem(i[0]);
+            handleClose();
+          }} rows={[...data, { id: 'totalrow', item_name: "Grand Total", total: total }]} columns={columns}
+          componentsProps={{
+            toolbar: {
+              value: searchText,
+              onChange: (event) => requestSearch(event.target.value),
+              clearSearch: () => requestSearch(''),
+            },
+          }}
+        />
+        <Button variant="contained" color="primary" onClick={handleCheckoutClose} >Checkout</Button>
+      </div>
       <EditQuantity open={open} handleClose={handleClose} item={item} />
+      <CheckOut open={checkoutOpen} handleOpen={handleCheckoutClose} />
     </div>
   );
 }
