@@ -71,14 +71,15 @@ const useStyles = makeStyles((theme) => ({
 
 function SalesInvoicePdf({ pageSize, file, open, handleOpen }) {
     const [pageNumber, setPageNumber] = useState(1);
+
     const [pdf, setPdf] = useState(null);
 
-    useEffect(async()=>{
+    useEffect(async () => {
         if (file) {
             const p = await file.getBuffer();
             setPdf(p);
         }
-    },[file])
+    }, [file])
 
     const classes = useStyles();
 
@@ -96,27 +97,27 @@ function SalesInvoicePdf({ pageSize, file, open, handleOpen }) {
                         </Document>
                     </CardMedia>
                     <Button onClick={() => {
-                        try{
+                        try {
                             file.download();
-                        }catch(err){
+                        } catch (err) {
 
                         }
-                    }}><GetAppIcon  color="primary" /></Button>
+                    }}><GetAppIcon color="primary" /></Button>
 
-                {pageNumber < pageSize ? (
-                    <Button onClick={() => {
-                        if (pageNumber < pageSize) {
-                            setPageNumber(pageNumber + 1);
-                        }
-                    }}><NavigateNextIcon/></Button>
+                    {pageNumber < pageSize ? (
+                        <Button onClick={() => {
+                            if (pageNumber < pageSize) {
+                                setPageNumber(pageNumber + 1);
+                            }
+                        }}><NavigateNextIcon /></Button>
 
-                ) : ""}
+                    ) : ""}
 
-                {pageNumber-1 > 0 ? (
-                    <Button onClick={() => {
-                        setPageNumber(pageNumber - 1);
-                    }}><NavigateBeforeIcon/></Button>
-                ) : ""}
+                    {pageNumber - 1 > 0 ? (
+                        <Button onClick={() => {
+                            setPageNumber(pageNumber - 1);
+                        }}><NavigateBeforeIcon /></Button>
+                    ) : ""}
                 </CardContent>
             </Card>
         </Modal>
@@ -131,6 +132,8 @@ export default function CheckOut({ open, handleOpen }) {
     const [payment_method, setPaymentMethod] = useState("");
     const [openInvoice, setOpenInvoice] = useState(false);
     const [paid_amount, setPaidAmount] = useState(0);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const [pageSize, setPageSize] = useState(0);
 
@@ -173,14 +176,19 @@ export default function CheckOut({ open, handleOpen }) {
                             </CardContent>
                             <CardActions>
                                 <Button onClick={async () => {
-                                    await createInvoice({customer_name, payment_method, paid_amount})
-                                    const d = getDocumentDefination();
-                                    const len = (await pdfMake.createPdf(d).getStream())._pdfMakePages.length;
-                                    console.log(len);
-                                    setPageSize(len);
-                                    const pdf = pdfMake.createPdf(d);
-                                    setFile(pdf);
-                                    handleOpenInvoice()
+                                    try {
+                                        const res = await createInvoice({ customer_name, payment_method, paid_amount })
+                                        enqueueSnackbar('checkout successful ', { variant: 'success' });
+                                        const d = getDocumentDefination(res.data);
+                                        const len = (await pdfMake.createPdf(d).getStream())._pdfMakePages.length;
+                                        setPageSize(len);
+                                        const pdf = pdfMake.createPdf(d);
+                                        setFile(pdf);
+                                        handleOpenInvoice()
+                                    } catch (err) {
+                                        console.log(err)
+                                        enqueueSnackbar(err.data, { variant: 'error' });
+                                    }
                                 }}
                                     variant='contained' color='primary'>Complete Checkout</Button>
                             </CardActions>

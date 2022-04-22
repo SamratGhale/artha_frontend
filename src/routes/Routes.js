@@ -4,7 +4,7 @@ import React from "react";
 import Home from '../home';
 import ComponentWrapper from '../global/ComponentWrapper';
 import { Redirect } from "react-router-dom";
-import Admin from '../home/admin'
+import Admin from '../modules/admin'
 import AuthProtect from "../global/AuthProtect";
 import { ROLES } from "../constants";
 import Inventory from "../modules/inventory";

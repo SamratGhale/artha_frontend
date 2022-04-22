@@ -32,13 +32,13 @@ export const InventoryContextProvider = ({ children }) => {
     payload.staff_id = user._id;
     const form = toFormData(payload);
     const ret = await Service.createInvoice(form);
-    console.log(ret)
 
     const cart = state.cartItems;
 
     cart.forEach(async(i)=>{
       await Service.addToInvoice(ret.data._id, toFormData({item_id: i._id, cartQuantity: i.cartQuantity}));
     })
+    return ret;
   }
 
   async function getAllItems() {
@@ -66,15 +66,16 @@ export const InventoryContextProvider = ({ children }) => {
   }
 
   //for pdf generation of invoice
-  function getDocumentDefination(){
+  function getDocumentDefination(invoice_info){
     const arr = getDocumentArray();
     const items = arr.items;
     var dd = {
       content: [
         { text: 'Artha', style: 'header' },
         { text: 'Sales Invoice', style: 'anotherStyle' },
-        {text:"SI = ", style:"si"},
-        {text:"Samrat Ghale", style:"customer"},
+        {text:`SI = ${invoice_info._id}`, style:"si"},
+        {text:`${invoice_info.customer_name}`, style:"customer"},
+        {text:`Payment method = ${invoice_info.payment_method}`, style:"customer"},
         
         {
             layout: 'lightHorizontalLines', // optional
@@ -87,13 +88,13 @@ export const InventoryContextProvider = ({ children }) => {
             body: [
               [ 'Item Name', 'Unit Price (Rs)', 'Quantity', 'Amount' ],
               ...items,
-              [ "", '', {text:"Sub otal", bold: true}, 'Val 4' ],
-              [ "", '', {text:"Total", bold: true}, 'Val 4' ]
+              [ "", '', {text:"Sub total", bold: true}, arr.total ],
+              [ "", '', {text:"Total", bold: true}, arr.total ]
             ]
           },
           style:'table'
         },
-        { text: 'Sales Invoice', style: 'footer' },
+        { text: 'Thank you visit again!', style: 'footer' },
         
         
       ],

@@ -39,14 +39,40 @@ export async function addUser(payload) {
     });
 }
 
-export async function getAllUser(payload) {
+export async function getAllUser() {
     try {
-        const res = await axios.get(USER, payload,{}, {
+        const res = await axios.get(USER, {
             headers: {
                 'access_token': access_token
             }
         });
-        return res;
+        return res.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function approveUser(id) {
+    try {
+        const res = await axios.put(USER +`/${id}`,{}, {
+            headers: {
+                'access_token': access_token
+            }
+        });
+        return res.data;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export async function updateUser(id, data) {
+    try {
+        const res = await axios.post(USER +`/${id}/update`,data, {
+            headers: {
+                'access_token': access_token
+            }
+        });
+        return res.data;
     } catch (err) {
         console.error(err);
     }

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Cart from "./cart";
-import LocalAtmSharpIcon from '@material-ui/icons/LocalAtmSharp';
 import StorefrontSharpIcon from '@material-ui/icons/StorefrontSharp';
 import AppBar from "@material-ui/core/AppBar";
-import { SnackbarProvider } from 'notistack';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
@@ -13,7 +11,6 @@ import SwipeableViews from "react-swipeable-views";
 import ListItems from './items/index'
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { Grid } from "@material-ui/core";
-import CheckOut from "./checkout";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -75,20 +72,17 @@ export default function Inventory() {
           />
         </Tabs>
       </AppBar>
-      <SnackbarProvider maxSnack={5}>
-        <SwipeableViews
-          axis={classes.direction === "rtl" ? "x-reverse" : "x"}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-        >
-          <TabPanel value={value} index={0}>
-            <ListItems />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Cart />
-          </TabPanel>
-        </SwipeableViews>
-      </SnackbarProvider>
+      <SwipeableViews
+        index={value}
+        onChangeIndex={handleChangeIndex}
+      >
+        <TabPanel value={value} index={0}>
+          <ListItems />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Cart />
+        </TabPanel>
+      </SwipeableViews>
     </div>
   );
 }

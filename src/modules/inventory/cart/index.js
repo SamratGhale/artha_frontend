@@ -153,27 +153,35 @@ export default function Cart() {
 
   return (
     <div>
-      <div style={{ height: 600, width: '100%' }}>
-        <DataGrid autoHeight
+      {cartItems.length !== 0 ? (
+        <div style={{ height: 600, width: '100%' }}>
+          <DataGrid autoHeight
+            style={{ 'backgroundColor': '#003444' }}
+            components={{ Toolbar: QuickSearchToolbar }}
+            onRowDoubleClick={(s) => {
+              if (s.id == 'totalrow') return;
+              const i = cartItems.filter(e => e._id == s.id);
+              setItem(i[0]);
+              handleClose();
+            }} rows={[...data, { id: 'totalrow', item_name: "Grand Total", total: total }]} columns={columns}
+            componentsProps={{
+              toolbar: {
+                value: searchText,
+                onChange: (event) => requestSearch(event.target.value),
+                clearSearch: () => requestSearch(''),
+              },
+            }}
+          />
+          <Button variant="contained" color="primary" onClick={handleCheckoutClose} >Checkout</Button>
+        </div>
 
-          style={{ 'backgroundColor': '#9e9780' }}
-          components={{ Toolbar: QuickSearchToolbar }}
-          onRowDoubleClick={(s) => {
-            if (s.id == 'totalrow') return;
-            const i = cartItems.filter(e => e._id == s.id);
-            setItem(i[0]);
-            handleClose();
-          }} rows={[...data, { id: 'totalrow', item_name: "Grand Total", total: total }]} columns={columns}
-          componentsProps={{
-            toolbar: {
-              value: searchText,
-              onChange: (event) => requestSearch(event.target.value),
-              clearSearch: () => requestSearch(''),
-            },
-          }}
-        />
-        <Button variant="contained" color="primary" onClick={handleCheckoutClose} >Checkout</Button>
-      </div>
+      ) : (
+        <div>
+          <Typography variant="h3">
+            Cart is empty
+          </Typography>
+          </div>
+      )}
       <EditQuantity open={open} handleClose={handleClose} item={item} />
       <CheckOut open={checkoutOpen} handleOpen={handleCheckoutClose} />
     </div>

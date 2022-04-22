@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 import userReduce from './reducers';
 import * as Service from './services';
 import API from '../../constants/api';
@@ -10,6 +10,7 @@ const USER = API.USER;
 
 const initialState = {
   user_info: {},
+  list: [],
   refresh: false
 };
 
@@ -51,54 +52,44 @@ export const UserContextProvider = ({ children }) => {
     return await Service.addUser(form);
   }
 
-  async function addUserAndApprove(payload) {
-    try {
-      await axios.post(
-        USER+ `/${payload.address}/approve`,
-        {},
-        {
-          headers: { access_token: access_token }
-        }
-      );
-      return 'User registered';
-    } catch (err) {
-      return err;
-    }
-  }
-  async function addUserBackend(payload) {
-    const { file, userDetails } = payload;
-    if (file == null) {
-      return 'no identify file selected';
-    }
-    try {
-      const formData = new FormData();
-      formData.append('email', userDetails['email']);
-      formData.append('password', userDetails['password']);
-      const config = {
-        headers: { access_token: access_token }
-      };
-      axios
-        .post(USER, formData, config)
-        .then((res) => {
-          return 'User added successfully!';
-        })
-        .catch((err) => {});
-    } catch (err) {
-      if (err.data) {
-        let arr = err.data.message.split(':');
-        return arr[1];
-      } else if (err.message) {
-        let arr = err.message.split(':');
-        return arr[1];
-      } else {
-        return 'Could not complete transaction';
-      }
+
+  async function getAllUser() {
+    try{
+      const res = await Service.getAllUser();
+      console.log(res.data)
+      dispatch({type: actions.SET_LIST, data: res.data} )
+    }catch(err){
+      console.log(err)
     }
   }
 
-  async function getAllUser(payload) {
-    return await Service.getAllUser(payload);
+  async function refreshData(){
+      dispatch({type: actions.REFRESH_DATA})
   }
+  async function approveUser(id){
+    try{
+      await Service.approveUser(id);
+      dispatch({type: actions.REFRESH_DATA} )
+    }catch(err){
+      throw err;
+    }
+  }
+
+  async function updateUser(id, data){
+    try{
+      await Service.updateUser(id, data);
+      dispatch({type: actions.REFRESH_DATA} )
+    }catch(err){
+      throw err;
+    }
+  }
+
+  useEffect(async()=>{
+    if(state.refresh === true){
+      await getAllUser();
+      dispatch({type: actions.REFRESH_DATA})
+    }
+  },[state.refresh])
 
   return (
     <UserContext.Provider
@@ -106,13 +97,14 @@ export const UserContextProvider = ({ children }) => {
         list: state.list,
         userLogin,
         verifyToken,
-        addUserAndApprove,
         getAllUser,
-        addUserBackend,
+        refreshData,
         dispatch,
         addUser,
         logout,
-        getAllRoles
+        getAllRoles,
+        approveUser,
+        updateUser
       }}
     >
       {children}

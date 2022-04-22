@@ -5,6 +5,8 @@ const reducer = (state, action) => {
       return { ...state, user_info: action.data };
     case ACTIONS.REFRESH_DATA:
       return { ...state, refresh: !state.refresh};
+    case ACTIONS.SET_LIST:
+      return { ...state, list : action.data};
     default:
       return state;
   }

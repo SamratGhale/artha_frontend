@@ -145,7 +145,7 @@ export default function EnhancedTable() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGrid autoHeight 
 
-      style={{'backgroundColor':'#9e9780'}}
+      style={{'backgroundColor':'#003444'}}
         components={{ Toolbar: QuickSearchToolbar }}
         onRowDoubleClick={(s) => {
           const i = items.filter(e => e._id == s.id);
