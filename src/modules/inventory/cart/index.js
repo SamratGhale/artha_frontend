@@ -154,9 +154,8 @@ export default function Cart() {
   return (
     <div>
       {cartItems.length !== 0 ? (
-        <div style={{ height: 600, width: '100%' }}>
+        <div >
           <DataGrid autoHeight
-            style={{ 'backgroundColor': '#003444' }}
             components={{ Toolbar: QuickSearchToolbar }}
             onRowDoubleClick={(s) => {
               if (s.id == 'totalrow') return;

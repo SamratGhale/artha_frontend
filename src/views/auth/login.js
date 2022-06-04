@@ -5,7 +5,7 @@ import { Grid } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { UserContext } from '../../modules/users/context';
 import { ROOTS } from '../../routes/paths';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme) => ({
 const Login = ({handleClose, setMessage, setSevernity}) => {
     const classes = useStyles();
     const {userLogin} = useContext(UserContext);
-    const history = useHistory();
+    const navigate = useNavigate();
     const handleLogin=async()=>{
         try{
             await userLogin({email, password});
             setMessage("Login successful");
             setSevernity("success");
             handleClose();
-            history.push(ROOTS.app)
+            navigate(ROOTS.app)
         }catch(err){
             setSevernity("error");
             setMessage(err.response.data.message);

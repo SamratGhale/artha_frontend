@@ -70,3 +70,12 @@ export async function getAllItem() {
         console.error(err);
     }
 }
+
+export async function getInvoiceById(id) {
+    try {
+        const res = await axios.get(`${INVOICE}/${id}`, {headers:{'access_token':access_token}});
+        return res.data;
+    } catch (err) {
+        console.error(err);
+    }
+}

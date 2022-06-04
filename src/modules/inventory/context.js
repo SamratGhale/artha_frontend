@@ -50,9 +50,9 @@ export const InventoryContextProvider = ({ children }) => {
   }
 
   function getDocumentArray(){
+    const cart = state.cartItems;
     const items = [['','','','']]
     var total = 0;
-    const cart = state.cartItems;
     for (let index = 0; index < cart.length; index++) {
       const item = cart[index];
       items[index] = []
@@ -64,17 +64,40 @@ export const InventoryContextProvider = ({ children }) => {
     }
     return {items, total};
   }
+  
+  function getDocumentArray2(cart){
+    const items = [['','','','']]
+    var total = 0;
+    console.log(cart)
+    for (let index = 0; index < cart.length; index++) {
+      const item = cart[index];
+      items[index] = []
+      items[index].push(item.item[0].item_name)
+      items[index].push(item.item[0].item_price.toString())
+      items[index].push(item.cartQuantity.toString())
+      items[index].push(item.total.toString())
+      total += item.total;
+    }
+    return {items, total};
+  }
+
+  async function getDocumentById(id){
+    const res = await Service.getInvoiceById(id);
+    console.log(res.items.length)
+    return getDocumentDefination(res);
+  }
 
   //for pdf generation of invoice
   function getDocumentDefination(invoice_info){
-    const arr = getDocumentArray();
+    const arr = getDocumentArray2(invoice_info.items);
     const items = arr.items;
     var dd = {
       content: [
         { text: 'Artha', style: 'header' },
         { text: 'Sales Invoice', style: 'anotherStyle' },
+        {text:`Date = ${invoice_info.created_at}`, style:"customer"},
         {text:`SI = ${invoice_info._id}`, style:"si"},
-        {text:`${invoice_info.customer_name}`, style:"customer"},
+        {text:`Customer Name = ${invoice_info.customer_name}`, style:"customer"},
         {text:`Payment method = ${invoice_info.payment_method}`, style:"customer"},
         
         {
@@ -239,6 +262,7 @@ export const InventoryContextProvider = ({ children }) => {
         removeFromCart,
         getDocumentDefination,
         createInvoice,
+        getDocumentById
       }}
     >
       {children}

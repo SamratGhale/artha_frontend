@@ -1,15 +1,16 @@
 import { Button } from "@material-ui/core";
 import { useContext } from "react";
 import { UserContext } from "../../modules/users/context";
-import { useHistory } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 
 const WaitForApprove = () => {
     const {logout} = useContext(UserContext);
+    const navigate = useNavigate();
 
-    const history = useHistory();
+
     const handleClick=()=>{
         logout();
-        history.push('/auth/login')
+        navigate('/auth/login')
     }
     return (
         <div>

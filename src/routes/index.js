@@ -2,17 +2,46 @@
 //Routes are the classes that contains information of the routes
 //Paths are just paths to the route
 import NProgress from 'nprogress';
-import { PATH_PAGE } from './paths';
-import Home from '../home';
+import { PATH_APP, PATH_PAGE, ROOTS } from './paths';
+import { Navigate, useRoutes, useLocation } from 'react-router-dom';
+
 // import HomeRoutes from './HomeRoutes';
-import { Switch, Route } from 'react-router-dom';
 import DefaultAuth from '../global/DefaultProtect';
 import React, { Fragment, useEffect, Suspense, lazy } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppRoutes from './Routes';
+//import AppRoutes from './Routes';
+import AuthProtect from '../global/AuthProtect';
+import DashBoardLayout from '../laylouts';
+import ComponentWrapper from '../global/ComponentWrapper';
+import LoadingScreen from '../components/LoadingScreen';
+
+
+const Loadable = (Component) => (props) => {
+
+  return (
+    <Suspense
+      fallback={
+        <LoadingScreen
+        sx={{
+          ...({
+            top: 0,
+            left: 0,
+            width: 1,
+            zIndex: 9999,
+            position: 'fixed',
+          })
+        }}
+        />
+      }
+    >
+      <Component {...props} />
+    </Suspense>
+  );
+};
 //import DefaultAuth from 'src/global/Auth/DefaultProtect';
 // ----------------------------------------------------------------------
 
+/*
 const nprogressStyle = makeStyles((theme) => ({
   '@global': {
     '#nprogress': {
@@ -58,7 +87,50 @@ function RouteProgress(props) {
 
   return <Route {...props} />;
 }
+*/
 
+export default function Router(){
+  return useRoutes([
+    {
+      path: 'app',
+      element:(
+        <AuthProtect>
+          <DashBoardLayout/>
+        </AuthProtect>
+      ),
+      children:[
+        {path: '', element: <Home/>},
+        {path: 'items', element: <Inventory/>},
+        {path: 'analytics', element: <Analytics/>},
+      ]
+    },
+    {
+      path: 'admin',
+      element:(
+        <AuthProtect>
+          <DashBoardLayout/>
+        </AuthProtect>
+      ),
+      children:[
+        {element: <Navigate to ="/admin" replace/>},
+        {path: '', element: <Admin/>},
+        {path: PATH_APP.admin.item_add , element: <AddItems/>},
+        {path: 'invoices', element: <Invoices/>},
+        {path: 'items/add' , element: <AdminInventory/>},
+      ]
+    },
+    {
+      path:'',
+      children:[
+        { path: PATH_PAGE.auth.login, element:<Auth/>},
+        { path: '/404', element:<Page404View/>},
+        { path: PATH_PAGE.auth.waitForApprove, element:<WaitForApprove/>},
+      ]
+    }
+  ])
+}
+
+/*
 export const renderRoutes = (routes = []) => {
   return (
     <Suspense fallback={<Home />} >
@@ -117,4 +189,15 @@ const routes = [
   },
   AppRoutes,
 ];
-export default routes;
+*/
+
+const Admin = Loadable(lazy(()=>import('../modules/admin')));
+const Home = Loadable(lazy(()=>import('../home')));
+const AddItems      = Loadable(lazy(()=>import('../modules/inventory/items/add')));
+const Invoices      = Loadable(lazy(()=>import("../modules/admin/invoices")));
+const Inventory     = Loadable(lazy(()=>import('../modules/inventory')));
+const AdminInventory= Loadable(lazy(()=>import("../modules/admin")));
+const Analytics     = Loadable(lazy(()=>import('../modules/analytics')));
+const Auth          = Loadable(lazy(()=>import('../views/auth/index')));
+const Page404View   = Loadable(lazy(()=>import('../views/misc/page404')));
+const WaitForApprove= Loadable(lazy(()=>import('../views/misc/waitForApprove')));

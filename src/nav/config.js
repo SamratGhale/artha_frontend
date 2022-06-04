@@ -1,6 +1,8 @@
 import AuthProtectNav from "../views/auth/AuthProtectNav"
 import { ROLES } from "../constants";
 import { PATH_APP, ROOTS } from "../routes/paths";
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import InsightsIcon from '@mui/icons-material/Insights';
 import HomeIcon from '@material-ui/icons/Home'; 
 import AddIcon from '@material-ui/icons/Add';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
@@ -20,6 +22,11 @@ const navConfig = [
                 title: 'Inventory',
                 href: PATH_APP.app.inventory,
                 icon: <LocalMallIcon/>
+            },
+            {
+                title: 'Analytics',
+                href: PATH_APP.app.analytics,
+                icon: <InsightsIcon/>
             }
         ]
     },
@@ -37,6 +44,11 @@ const navConfig = [
                 title: 'Add Items',
                 href: PATH_APP.admin.item_add,
                 icon: <AddIcon/>
+            },
+            {
+                title: 'Invoices',
+                href: PATH_APP.admin.invoices,
+                icon: <ReceiptIcon/>
             }
 
         ]

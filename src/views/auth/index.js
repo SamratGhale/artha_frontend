@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs() {
+export default function Auth() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 

@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function SalesInvoicePdf({ pageSize, file, open, handleOpen }) {
+export function SalesInvoicePdf({ pageSize, file, open, handleOpen }) {
     const [pageNumber, setPageNumber] = useState(1);
 
     const [pdf, setPdf] = useState(null);

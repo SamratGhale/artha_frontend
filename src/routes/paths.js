@@ -29,6 +29,7 @@ export const PATH_PAGE = {
     app:
     {
       item_detail     : merge_path(ROOTS.app, '/items/:id'),
+      analytics       : merge_path(ROOTS.app, '/analytics'),
       inventory       : merge_path(ROOTS.app, '/items'),
       customers       : merge_path(ROOTS.app, '/customers'),
       customer_details: merge_path(ROOTS.app, '/customers/:id'),
@@ -36,6 +37,7 @@ export const PATH_PAGE = {
     admin: 
     {
       inventory    :merge_path(ROOTS.admin, '/items/'),
+      invoices     :merge_path(ROOTS.admin, '/invoices/'),
       item_add     :merge_path(ROOTS.admin, '/items/add'),
       item_detail  :merge_path(ROOTS.admin, '/items/'),
       dashboard    :merge_path(ROOTS.admin, '/dashboard'),

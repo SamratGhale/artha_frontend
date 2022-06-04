@@ -1,38 +1,33 @@
-import React from 'react';
+import { useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import { PATH_PAGE, ROOTS } from '../routes/paths';
+// pages
+import Login from '../views/auth/login';
 import { getUser } from '../utils/sessionManager';
 
-AuthProtect.propTypes = {
+// ----------------------------------------------------------------------
+
+AuthGuard.propTypes = {
   children: PropTypes.node
 };
 
-function AuthProtect({ children, authorizedUsers }) {
-  const currentUser = getUser();
-  if (!currentUser) {
-    return <Redirect to={PATH_PAGE.auth.login} />;
+export default function AuthGuard({ children }) {
+  const user  = getUser();
+  const { pathname } = useLocation();
+  const [requestedLocation, setRequestedLocation] = useState(null);
+
+  if (!user) {
+    if (pathname !== requestedLocation) {
+      setRequestedLocation(pathname);
+    }
+    return <Login />;
   }
-  const { role, is_approved } = currentUser;
-  if (!is_approved) {
-    return <Redirect to={PATH_PAGE.auth.waitForApprove} />;
+
+  if (requestedLocation && pathname !== requestedLocation) {
+    setRequestedLocation(null);
+    return <Navigate to={requestedLocation} />;
   }
-  const { isLoading } = { isLoading: false };
-  if (isLoading) {
-    return(
-        <div>
-            Loading..
-        </div>
-    )
-  }
-  if(authorizedUsers.length===0){
-    return <>{children}</>;
-  }
-  if (authorizedUsers && authorizedUsers.includes(role)) {
-    return <>{children}</>;
-  } else {
-    return <Redirect to={ROOTS.app} />;
-  }
+
+  return <>{children}</>;
 }
 
-export default AuthProtect;

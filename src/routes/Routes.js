@@ -1,3 +1,4 @@
+/*
 import {PATH_APP, ROOTS} from "./paths";
 import DashBoardLayout from "../laylouts";
 import React from "react";
@@ -11,6 +12,7 @@ import Inventory from "../modules/inventory";
 import AdminInventory from "../modules/admin";
 import ItemDetail from "../modules/inventory/items/details/itemDetail";
 import AddItems from "../modules/inventory/items/add";
+import Invoices from "../modules/admin/invoices";
 
 const Routes = {
     path: '*',
@@ -37,6 +39,18 @@ const Routes = {
             component : (props)=>(
                 <ComponentWrapper {...props}>
                     <Admin/>
+                </ComponentWrapper>
+            )
+        },
+        {
+            exact: true,
+            path:PATH_APP.admin.invoices, 
+            heading:'Invoices',
+            roles:[ROLES.ADMIN, ROLES.SUPER_ADMIN],
+            guard: AuthProtect,
+            component : (props)=>(
+                <ComponentWrapper {...props}>
+                    <Invoices/>
                 </ComponentWrapper>
             )
         },
@@ -106,3 +120,4 @@ const Routes = {
     ]
 }
 export default Routes;
+*/
