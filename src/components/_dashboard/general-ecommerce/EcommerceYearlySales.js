@@ -10,14 +10,14 @@ import { BaseOptionChart } from '../../charts';
 
 const CHART_DATA = [
   {
-    year: 2019,
+    year: 2020,
     data: [
       { name: 'Total Income', data: [10, 41, 35, 151, 49, 62, 69, 91, 48] },
       { name: 'Total Expenses', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
     ]
   },
   {
-    year: 2020,
+    year: 2021,
     data: [
       { name: 'Total Income', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
       { name: 'Total Expenses', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }

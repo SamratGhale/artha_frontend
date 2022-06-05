@@ -7,7 +7,7 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Select } from '@material-ui/core';
 import { CardHeader } from '@material-ui/core';
-import { CardMedia } from '@material-ui/core';
+import { CardMedia } from '@mui/material';
 import { TextField } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal';
@@ -91,8 +91,8 @@ export function SalesInvoicePdf({ pageSize, file, open, handleOpen }) {
             aria-describedby="simple-modal-description">
             <Card className={classes.cardRoot} variant="outlined">
                 <CardContent>
-                    <CardMedia>
-                        <Document file={new Blob([pdf], { type: 'application/pdf' })} >
+                    <CardMedia sx={{height: 500}} >
+                        <Document  file={new Blob([pdf], { type: 'application/pdf' })} >
                             <Page pageNumber={pageNumber} />
                         </Document>
                     </CardMedia>

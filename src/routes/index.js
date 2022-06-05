@@ -91,6 +91,11 @@ function RouteProgress(props) {
 
 export default function Router(){
   return useRoutes([
+    {path: '', element: (
+      <DashBoardLayout>
+        <Home />
+      </DashBoardLayout>
+    )},
     {
       path: 'app',
       element:(

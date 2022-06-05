@@ -89,7 +89,12 @@ export const InventoryContextProvider = ({ children }) => {
 
   //for pdf generation of invoice
   function getDocumentDefination(invoice_info){
-    const arr = getDocumentArray2(invoice_info.items);
+    var arr = []
+    if(invoice_info.items){
+      arr = getDocumentArray2(invoice_info.items);
+    }else{
+      arr = getDocumentArray();
+    }
     const items = arr.items;
     var dd = {
       content: [
